@@ -13,6 +13,9 @@ class kml_document:
         self.name = name
         self.document_root = []
 
+    def add_child(self, child):
+        self.document_root.append(child)
+
     def write_to_file(self, filename):
         children = "".join(str(c) for c in self.document_root)
         document = template_kml_document.format(
