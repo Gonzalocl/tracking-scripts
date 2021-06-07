@@ -39,13 +39,14 @@ def get_quarter(date):
 
 def get_line(filename):
 
+    total_distance = 0
+    line = kml_document.kml_line(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'), "")
+
     with open(filename["filename"]) as file:
         points = csv.reader(file)
         next(points)
         last_point = next(points)
-        total_distance = 0
 
-        line = kml_document.kml_line(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'), "")
         line.add_coordinate(last_point[1], last_point[0])
 
         for point in points:
@@ -56,9 +57,9 @@ def get_line(filename):
 
             last_point = point
 
-        line.description = ""
+    line.description = ""
 
-        return line
+    return line
 
 def get_lines(filenames):
 
@@ -80,18 +81,58 @@ def get_lines(filenames):
     lines_folder.add_child(q4)
     return lines_folder
 
-def get_track_points(filename, points, labels):
+def add_point(folder, point, label):
+
+    longitude = point[1]
+    latitude = point[0]
+    altitude = point[2]
+    accuracy = point[3]
+    timestamp = int(point[4])
+
+    date = datetime.datetime.fromtimestamp(timestamp/1000)
+    name = date.strftime('%H-%M-%S')
+
+    description = 'Date: {}\nAltitude: {}\nAccuracy: {}'.format(
+        date.strftime('%Y-%m-%d %H-%M-%S'),
+        altitude,
+        accuracy
+    )
+
+    folder.add_child(kml_document.kml_point(name, description, longitude, latitude, label))
+
+def get_track_points(filename, point_seconds, label_seconds):
+
+    point_interval = point_seconds*1000
+    label_interval = label_seconds*1000
+    next_point = int(filename["start_date"].timestamp()*1000)
+    next_label = next_point
+
+    folder = kml_document.kml_folder(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
 
     with open(filename["filename"]) as file:
         points = csv.reader(file)
         next(points)
 
-        folder = kml_document.kml_folder(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
-
         for point in points:
-            folder.add_child(kml_document.kml_point(point[4], 0, point[1], point[0], False))
 
-        return folder
+            timestamp = int(point[4])
+
+            if timestamp >= next_label:
+
+                add_point(folder, point, True)
+
+                next_label =  timestamp + label_interval
+                next_point = timestamp + point_interval
+
+            elif timestamp >= next_point:
+
+                add_point(folder, point, False)
+
+                next_point = timestamp + point_interval
+
+        add_point(folder, point, True)
+
+    return folder
 
 def get_points(filenames, points, labels):
 
