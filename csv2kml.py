@@ -69,12 +69,20 @@ def get_lines(filenames):
     q4 = kml_document.kml_folder("Q4")
     quarters = [q1, q2, q3, q4]
 
+    total = len(filenames)
+    done = 0
+    print('lines: {}/{}'.format(done, total), end='\r')
+
     for filename in filenames:
-        print(filename["filename"])
         quarter = get_quarter(filename["start_date"])
         quarters[quarter].add_child(get_line(filename))
 
-    lines_folder = kml_document.kml_folder("lines")
+        done += 1
+        print('lines: {}/{}'.format(done, total), end='\r')
+
+    print()
+
+    lines_folder = kml_document.kml_folder("lines", True)
     lines_folder.add_child(q1)
     lines_folder.add_child(q2)
     lines_folder.add_child(q3)
@@ -142,12 +150,20 @@ def get_points(filenames, points, labels):
     q4 = kml_document.kml_folder("Q4")
     quarters = [q1, q2, q3, q4]
 
+    total = len(filenames)
+    done = 0
+    print('points: {}/{}'.format(done, total), end='\r')
+
     for filename in filenames:
-        print(filename["filename"])
         quarter = get_quarter(filename["start_date"])
         quarters[quarter].add_child(get_track_points(filename, points, labels))
 
-    points_folder = kml_document.kml_folder("points")
+        done += 1
+        print('points: {}/{}'.format(done, total), end='\r')
+
+    print()
+
+    points_folder = kml_document.kml_folder("points", True)
     points_folder.add_child(q1)
     points_folder.add_child(q2)
     points_folder.add_child(q3)
