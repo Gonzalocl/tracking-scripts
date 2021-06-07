@@ -4,8 +4,8 @@ template_kml_folder = "<Folder><name>{}</name><open>{}</open>{}</Folder>"
 template_kml_line = "<Placemark><name>{}</name><visibility>{}</visibility><description>{}</description><styleUrl>{}</styleUrl><LineString><coordinates>{}</coordinates></LineString></Placemark>"
 template_kml_point = "<Placemark><name>{}</name><visibility>{}</visibility><description>{}</description><styleUrl>{}</styleUrl><Point><coordinates>{},{},0</coordinates></Point></Placemark>"
 default_style_line = "<Style id=\"line\"><LineStyle><color>ffffff55</color><width>2</width></LineStyle></Style>"
-default_style_point = "<Style id=\"point\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><LabelStyle><color>00ffffff</color></LabelStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
-default_style_point_no_label = "<Style id=\"point_no_label\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
+default_style_point = "<Style id=\"point\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
+default_style_point_no_label = "<Style id=\"point_no_label\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><LabelStyle><color>00ffffff</color></LabelStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
 
 class kml_document:
 
@@ -75,9 +75,9 @@ class kml_point:
         self.visibility = visibility
         self.description = description
         if label:
-            self.style = "#point_no_label"
-        else:
             self.style = "#point"
+        else:
+            self.style = "#point_no_label"
 
     def __str__(self):
         return template_kml_point.format(
