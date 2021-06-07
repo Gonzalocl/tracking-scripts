@@ -81,7 +81,17 @@ def get_lines(filenames):
     return lines_folder
 
 def get_track_points(filename, points, labels):
-    pass
+
+    with open(filename["filename"]) as file:
+        points = csv.reader(file)
+        next(points)
+
+        folder = kml_document.kml_folder(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
+
+        for point in points:
+            folder.add_child(kml_document.kml_point(point[4], 0, point[1], point[0], False))
+
+        return folder
 
 def get_points(filenames, points, labels):
 
@@ -92,6 +102,7 @@ def get_points(filenames, points, labels):
     quarters = [q1, q2, q3, q4]
 
     for filename in filenames:
+        print(filename["filename"])
         quarter = get_quarter(filename["start_date"])
         quarters[quarter].add_child(get_track_points(filename, points, labels))
 
