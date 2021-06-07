@@ -40,7 +40,7 @@ def get_quarter(date):
 def get_line(filename):
 
     total_distance = 0
-    line = kml_document.kml_line(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
+    line = kml_document.kml_line(filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'))
 
     with open(filename["filename"]) as file:
         points = csv.reader(file)
@@ -57,7 +57,14 @@ def get_line(filename):
 
             last_point = point
 
-    line.description = ""
+    end_date = datetime.datetime.fromtimestamp(int(point[4])/1000)
+
+    line.description = 'Start: {}\nEnd: {}\nDuration: {}\nLength: {} m'.format(
+        filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'),
+        end_date.strftime('%Y-%m-%d %H:%M:%S'),
+        end_date-filename['start_date'],
+        int(total_distance*1000)
+    )
 
     return line
 
@@ -93,15 +100,15 @@ def add_point(folder, point, label):
 
     longitude = point[1]
     latitude = point[0]
-    altitude = point[2]
-    accuracy = point[3]
+    altitude = float(point[2])
+    accuracy = float(point[3])
     timestamp = int(point[4])
 
     date = datetime.datetime.fromtimestamp(timestamp/1000)
-    name = date.strftime('%H-%M-%S')
+    name = date.strftime('%H:%M:%S')
 
-    description = 'Date: {}\nAltitude: {}\nAccuracy: {}'.format(
-        date.strftime('%Y-%m-%d %H-%M-%S'),
+    description = 'Date: {}\nAltitude: {:.2f}\nAccuracy: {:.2f}'.format(
+        date.strftime('%Y-%m-%d %H:%M:%S'),
         altitude,
         accuracy
     )
@@ -115,7 +122,7 @@ def get_track_points(filename, point_seconds, label_seconds):
     next_point = int(filename["start_date"].timestamp()*1000)
     next_label = next_point
 
-    folder = kml_document.kml_folder(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
+    folder = kml_document.kml_folder(filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'))
 
     with open(filename["filename"]) as file:
         points = csv.reader(file)
