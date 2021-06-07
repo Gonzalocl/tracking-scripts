@@ -5,7 +5,9 @@ template_kml_line = "<Placemark><name>{}</name><visibility>{}</visibility><descr
 template_kml_point = "<Placemark><name>{}</name><visibility>{}</visibility><description>{}</description><styleUrl>{}</styleUrl><Point><coordinates>{},{},0</coordinates></Point></Placemark>"
 default_style_line = "<Style id=\"line\"><LineStyle><color>ffffff55</color><width>2</width></LineStyle></Style>"
 default_style_point = "<Style id=\"point\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
-default_style_point_no_label = "<Style id=\"point_no_label\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><LabelStyle><color>00ffffff</color></LabelStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>"
+default_style_point_no_label = "<Style id=\"point_no_label_normal\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><LabelStyle><color>00ffffff</color></LabelStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>" \
+                               "<Style id=\"point_no_label_highlight\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle><ListStyle><ItemIcon><href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href></ItemIcon></ListStyle></Style>" \
+                               "<StyleMap id=\"point_no_label\"><Pair><key>normal</key><styleUrl>#point_no_label_normal</styleUrl></Pair><Pair><key>highlight</key><styleUrl>#point_no_label_highlight</styleUrl></Pair></StyleMap>"
 
 class kml_document:
 
