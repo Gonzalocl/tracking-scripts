@@ -40,7 +40,7 @@ def get_quarter(date):
 def get_line(filename):
 
     total_distance = 0
-    line = kml_document.kml_line(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'), "")
+    line = kml_document.kml_line(filename["start_date"].strftime('%Y-%m-%d %H-%M-%S'))
 
     with open(filename["filename"]) as file:
         points = csv.reader(file)
@@ -98,7 +98,7 @@ def add_point(folder, point, label):
         accuracy
     )
 
-    folder.add_child(kml_document.kml_point(name, description, longitude, latitude, label))
+    folder.add_child(kml_document.kml_point(longitude, latitude, name, False, description, label))
 
 def get_track_points(filename, point_seconds, label_seconds):
 
