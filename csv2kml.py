@@ -34,13 +34,10 @@ def get_filenames(path):
 
     return year_filenames
 
-def get_quarter(date):
-    return (date.month-1)//3
-
 def get_line(filename):
 
     total_distance = 0
-    line = kml_document.kml_line(filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'))
+    line = kml_document.kml_line(filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'), visibility=False)
 
     with open(filename["filename"]) as file:
         points = csv.reader(file)
@@ -57,7 +54,7 @@ def get_line(filename):
 
             last_point = point
 
-    end_date = datetime.datetime.fromtimestamp(int(point[4])/1000)
+    end_date = datetime.datetime.fromtimestamp(int(last_point[4])/1000)
 
     line.description = 'Start: {}\nEnd: {}\nDuration: {}\nLength: {} m'.format(
         filename['start_date'].strftime('%Y-%m-%d %H:%M:%S'),
@@ -68,32 +65,36 @@ def get_line(filename):
 
     return line
 
+def month_folders(parent):
+
+    months = {}
+
+    for month in range(1, 13):
+
+        month_folder = kml_document.kml_folder("{:02}".format(month))
+        months[month] = month_folder
+        parent.add_child(month_folder)
+
+    return months
+
 def get_lines(filenames):
 
-    q1 = kml_document.kml_folder("Q1")
-    q2 = kml_document.kml_folder("Q2")
-    q3 = kml_document.kml_folder("Q3")
-    q4 = kml_document.kml_folder("Q4")
-    quarters = [q1, q2, q3, q4]
+    lines_folder = kml_document.kml_folder("lines", True)
+    months = month_folders(lines_folder)
 
     total = len(filenames)
     done = 0
     print('lines: {}/{}'.format(done, total), end='\r')
 
     for filename in filenames:
-        quarter = get_quarter(filename["start_date"])
-        quarters[quarter].add_child(get_line(filename))
+        month = filename["start_date"].month
+        months[month].add_child(get_line(filename))
 
         done += 1
         print('lines: {}/{}'.format(done, total), end='\r')
 
     print()
 
-    lines_folder = kml_document.kml_folder("lines", True)
-    lines_folder.add_child(q1)
-    lines_folder.add_child(q2)
-    lines_folder.add_child(q3)
-    lines_folder.add_child(q4)
     return lines_folder
 
 def add_point(folder, point, label):
@@ -151,30 +152,22 @@ def get_track_points(filename, point_seconds, label_seconds):
 
 def get_points(filenames, points, labels):
 
-    q1 = kml_document.kml_folder("Q1")
-    q2 = kml_document.kml_folder("Q2")
-    q3 = kml_document.kml_folder("Q3")
-    q4 = kml_document.kml_folder("Q4")
-    quarters = [q1, q2, q3, q4]
+    points_folder = kml_document.kml_folder("points", True)
+    months = month_folders(points_folder)
 
     total = len(filenames)
     done = 0
     print('points: {}/{}'.format(done, total), end='\r')
 
     for filename in filenames:
-        quarter = get_quarter(filename["start_date"])
-        quarters[quarter].add_child(get_track_points(filename, points, labels))
+        month = filename["start_date"].month
+        months[month].add_child(get_track_points(filename, points, labels))
 
         done += 1
         print('points: {}/{}'.format(done, total), end='\r')
 
     print()
 
-    points_folder = kml_document.kml_folder("points", True)
-    points_folder.add_child(q1)
-    points_folder.add_child(q2)
-    points_folder.add_child(q3)
-    points_folder.add_child(q4)
     return points_folder
 
 def main(args):
@@ -202,6 +195,6 @@ if __name__ == '__main__':
     parser.add_argument("output_folder")
     parser.add_argument("--no_line", default=False, action="store_true")
     parser.add_argument("--points", default=None, type=int)
-    parser.add_argument("--labels", default=300)
+    parser.add_argument("--labels", default=900, type=int)
 
     main(parser.parse_args())
