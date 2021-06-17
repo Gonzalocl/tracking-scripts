@@ -186,7 +186,8 @@ def main(args):
         if args.points:
             document.add_child(get_points(filenames[year], args.points, args.labels))
 
-        document.write_to_file(os.path.join(args.output_folder, "{}.kml".format(year)))
+        time_now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        document.write_to_file(os.path.join(args.output_folder, "{}_{}.kml".format(year, time_now)))
 
 if __name__ == '__main__':
 
