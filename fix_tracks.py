@@ -19,7 +19,7 @@ for filename in remove_last_line:
             pos -= 1
             f.seek(pos, os.SEEK_SET)
         if pos > 0:
-            f.seek(pos, os.SEEK_SET)
+            f.seek(pos+1, os.SEEK_SET)
             f.truncate()
 
 for filename in remove_file:
